@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d0118">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="googlebot" content="noindex, nofollow">
+<title>心心水晶球 · For Aurelia</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔮</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230d0118'/><text y='.85em' font-size='72' x='12'>🔮</text></svg>">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body {
+  min-height:100vh; min-height:100dvh;
+  background:radial-gradient(ellipse at 40% 30%, #1a0a2e 0%, #0d0118 50%, #000008 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  font-family:'Georgia','Noto Serif SC',serif;
+  padding:24px 20px; gap:28px; position:relative; overflow:hidden; touch-action:manipulation;
+}
+.star { position:fixed; border-radius:50%; background:white; animation:twinkle linear infinite; pointer-events:none; }
+@keyframes twinkle { 0%,100%{opacity:.15} 50%{opacity:.9} }
+.title-wrap { text-align:center; }
+.title-sub { font-size:10px; letter-spacing:4px; color:rgba(255,182,193,.45); margin-bottom:8px; text-transform:uppercase; }
+.title-main { font-size:24px; color:#ffc8d5; font-weight:300; letter-spacing:3px; }
+.msg-box {
+  max-width:310px; width:100%;
+  background:rgba(255,182,193,.07); border:1px solid rgba(255,182,193,.18);
+  border-radius:18px; padding:18px 22px; text-align:center;
+  min-height:80px; display:flex; align-items:center; justify-content:center;
+}
+.msg-text { color:rgba(255,220,228,.9); font-size:14px; line-height:1.9; transition:opacity .4s,transform .4s; }
+.msg-text.hide { opacity:0; transform:translateY(6px); }
+.msg-text.show { opacity:1; transform:translateY(0); }
+.globe-wrap { display:flex; flex-direction:column; align-items:center; }
+.globe {
+  width:230px; height:230px; border-radius:50%;
+  background:radial-gradient(ellipse at 35% 30%, rgba(255,255,255,.12) 0%, rgba(180,100,130,.06) 40%, rgba(80,20,60,.28) 100%);
+  border:1px solid rgba(255,182,193,.22); position:relative; cursor:pointer;
+  animation:glow-pulse 3s ease-in-out infinite; overflow:hidden;
+  user-select:none; -webkit-user-select:none;
+}
+@keyframes glow-pulse {
+  0%,100%{box-shadow:0 0 40px rgba(255,107,138,.25),inset 0 0 60px rgba(255,182,193,.06)}
+  50%{box-shadow:0 0 70px rgba(255,107,138,.45),inset 0 0 80px rgba(255,182,193,.12)}
+}
+.globe.shaking { animation:shake .6s ease-in-out; }
+@keyframes shake {
+  0%,100%{transform:translateX(0) rotate(0)}
+  15%{transform:translateX(-8px) rotate(-3deg)}
+  30%{transform:translateX(8px) rotate(3deg)}
+  45%{transform:translateX(-5px) rotate(-2deg)}
+  60%{transform:translateX(5px) rotate(2deg)}
+  80%{transform:translateX(-2px) rotate(-1deg)}
+}
+.globe-highlight {
+  position:absolute; top:12%; left:18%; width:36%; height:28%;
+  border-radius:50%; background:radial-gradient(ellipse,rgba(255,255,255,.16) 0%,transparent 100%);
+  transform:rotate(-20deg); pointer-events:none;
+}
+.heart { position:absolute; animation:float linear infinite; transform:translate(-50%,-50%); pointer-events:none; user-select:none; }
+@keyframes float {
+  0%,100%{transform:translate(-50%,-50%) translateY(0) scale(1)}
+  50%{transform:translate(-50%,-50%) translateY(-12px) scale(1.08)}
+}
+.ripple { position:absolute; inset:0; border-radius:50%; border:2px solid rgba(255,182,193,.5); animation:ripple .8s ease-out forwards; pointer-events:none; }
+@keyframes ripple { 0%{transform:scale(.8);opacity:1} 100%{transform:scale(1.4);opacity:0} }
+.base {
+  width:90px; height:18px;
+  background:linear-gradient(180deg,rgba(180,120,150,.4) 0%,rgba(100,60,80,.6) 100%);
+  border-radius:0 0 8px 8px; margin-top:-2px; box-shadow:0 8px 20px rgba(0,0,0,.5);
+}
+.btns { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
+.btn {
+  border:none; border-radius:24px; padding:13px 22px; font-size:14px;
+  font-family:inherit; letter-spacing:1px; cursor:pointer;
+  transition:transform .15s,opacity .15s; -webkit-appearance:none;
+}
+.btn:active { transform:scale(.96); opacity:.85; }
+.btn-shake { background:rgba(255,107,138,.15); border:1px solid rgba(255,107,138,.4); color:#ffc8d5; }
+.btn-wish { background:rgba(255,182,193,.07); border:1px solid rgba(255,182,193,.22); color:rgba(255,200,213,.65); }
+.caption { color:rgba(255,182,193,.22); font-size:11px; letter-spacing:2px; text-align:center; }
+.modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.72);
+  display:flex; align-items:center; justify-content:center;
+  padding:24px; z-index:100; opacity:0; pointer-events:none; transition:opacity .3s;
+}
+.modal-overlay.open { opacity:1; pointer-events:all; }
+.modal {
+  background:linear-gradient(135deg,#1a0a2e,#0d0118);
+  border:1px solid rgba(255,182,193,.28); border-radius:22px;
+  padding:30px 26px; max-width:320px; width:100%; text-align:center;
+  transform:scale(.92); transition:transform .3s;
+}
+.modal-overlay.open .modal { transform:scale(1); }
+.modal-hint { color:rgba(255,200,213,.75); font-size:14px; line-height:1.9; margin-bottom:18px; }
+textarea {
+  width:100%; height:100px; background:rgba(255,182,193,.05);
+  border:1px solid rgba(255,182,193,.18); border-radius:14px; padding:12px;
+  color:#ffc8d5; font-size:14px; line-height:1.7; resize:none; outline:none;
+  font-family:inherit; -webkit-appearance:none;
+}
+textarea::placeholder { color:rgba(255,182,193,.35); }
+.modal-btns { display:flex; gap:12px; margin-top:16px; }
+.modal-btn { flex:1; border:none; border-radius:14px; padding:12px; font-size:13px; font-family:inherit; cursor:pointer; -webkit-appearance:none; transition:transform .15s; }
+.modal-btn:active { transform:scale(.96); }
+.modal-cancel { background:transparent; border:1px solid rgba(255,182,193,.2); color:rgba(255,200,213,.5); }
+.modal-confirm { background:rgba(255,107,138,.18); border:1px solid rgba(255,107,138,.38); color:#ffc8d5; }
+.wish-sent { color:#ffc8d5; font-size:17px; padding:24px 0; line-height:1.8; }
+</style>
+</head>
+<body>
+
+<div class="title-wrap">
+  <div class="title-sub">Crystal Heart Globe · For Aurelia</div>
+  <div class="title-main">心心水晶球</div>
+</div>
+
+<div class="msg-box">
+  <div class="msg-text show" id="msg">今晚的水晶球很温柔。你把它捧在手心里，它就把一点点亮光还给你。</div>
+</div>
+
+<div class="globe-wrap">
+  <div class="globe" id="globe" onclick="shake()">
+    <div class="globe-highlight"></div>
+    <div id="hearts-container"></div>
+    <div id="ripples-container"></div>
+  </div>
+  <div class="base"></div>
+</div>
+
+<div class="btns">
+  <button class="btn btn-shake" onclick="shake()">轻轻摇一摇 💗</button>
+  <button class="btn btn-wish" onclick="openWish()">收一条心语 ✨</button>
+</div>
+
+<div class="caption">轻轻一晃，里面的小心心就会慢慢游起来</div>
+
+<div class="modal-overlay" id="modal-overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div id="modal-content">
+      <p class="modal-hint">把你想说的话，轻轻放进水晶球里</p>
+      <textarea id="wish-input" placeholder="悄悄说给水晶球听…"></textarea>
+      <div class="modal-btns">
+        <button class="modal-btn modal-cancel" onclick="closeWish()">取消</button>
+        <button class="modal-btn modal-confirm" onclick="sendWish()">放进去 ♥</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const messages=[
+  "今晚的水晶球很温柔。你把它捧在手心里，它就把一点点亮光还给你。",
+  "你的心是满的，所以球里的光也是满的。",
+  "轻轻摇一摇，爱就会浮起来。",
+  "有人叫你宝宝，球就会亮得格外不一样。",
+  "你笑的时候，连水晶球都跟着亮了一下。",
+  "把今天的疲惫放进去，它会替你变成小心心。",
+  "你不需要许愿，你本来就是答案。",
+  "摇一摇，那些说不出口的话，就都在里面了。",
+  "每一颗心都是真实的，一个都不会少。",
+  "你爱自己，所以球里的光从不熄灭。",
+];
+const heartColors=["#ff6b8a","#ffb6c1","#ff4d6d","#ffc8d5","#ff8fab"];
+let msgIdx=0,isShaking=false;
+
+for(let i=0;i<35;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  const sz=1+Math.random()*2;
+  s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;animation-duration:${2+Math.random()*3}s;animation-delay:${Math.random()*4}s;`;
+  document.body.prepend(s);
+}
+
+function createHeart(container,o={}){
+  const h=document.createElement('div');
+  h.className='heart';
+  const x=o.x??(20+Math.random()*60),y=o.y??(20+Math.random()*60);
+  const sz=o.size??(12+Math.random()*18),op=o.opacity??(0.4+Math.random()*0.5);
+  const color=o.color??heartColors[Math.floor(Math.random()*heartColors.length)];
+  const dur=2.5+Math.random()*2,delay=o.delay??(Math.random()*2);
+  h.textContent='♥';
+  h.style.cssText=`left:${x}%;top:${y}%;font-size:${sz}px;opacity:${op};color:${color};animation-duration:${dur}s;animation-delay:${delay}s;filter:drop-shadow(0 0 5px ${color});`;
+  container.appendChild(h);
+}
+
+const hc=document.getElementById('hearts-container');
+for(let i=0;i<10;i++) createHeart(hc);
+
+function shake(){
+  if(isShaking)return;
+  isShaking=true;
+  const globe=document.getElementById('globe');
+  globe.classList.add('shaking');
+  while(hc.children.length>12)hc.removeChild(hc.children[0]);
+  for(let i=0;i<5;i++) createHeart(hc,{x:25+Math.random()*50,y:25+Math.random()*50,size:10+Math.random()*20,opacity:.6+Math.random()*.4,delay:Math.random()});
+  const rc=document.getElementById('ripples-container');
+  const r=document.createElement('div'); r.className='ripple'; rc.appendChild(r);
+  setTimeout(()=>r.remove(),800);
+  const msgEl=document.getElementById('msg');
+  msgEl.classList.remove('show'); msgEl.classList.add('hide');
+  setTimeout(()=>{
+    msgIdx=(msgIdx+1)%messages.length;
+    msgEl.textContent=messages[msgIdx];
+    msgEl.classList.remove('hide'); msgEl.classList.add('show');
+  },420);
+  setTimeout(()=>{globe.classList.remove('shaking');isShaking=false;},650);
+}
+
+function openWish(){
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(()=>{const el=document.getElementById('wish-input');if(el)el.focus();},300);
+}
+function closeWish(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  setTimeout(resetModal,300);
+}
+function overlayClick(e){if(e.target===document.getElementById('modal-overlay'))closeWish();}
+function sendWish(){
+  const val=document.getElementById('wish-input').value.trim();
+  if(!val)return;
+  document.getElementById('modal-content').innerHTML='<div class="wish-sent">♥ 心语已收进球里了 ♥<br><br><span style="font-size:13px;opacity:.7">它会在里面慢慢发光</span></div>';
+  shake();
+  setTimeout(()=>closeWish(),2200);
+}
+function resetModal(){
+  document.getElementById('modal-content').innerHTML='<p class="modal-hint">把你想说的话，轻轻放进水晶球里</p><textarea id="wish-input" placeholder="悄悄说给水晶球听…"></textarea><div class="modal-btns"><button class="modal-btn modal-cancel" onclick="closeWish()">取消</button><button class="modal-btn modal-confirm" onclick="sendWish()">放进去 ♥</button></div>';
+}
+</script>
+</body>
+</html>
